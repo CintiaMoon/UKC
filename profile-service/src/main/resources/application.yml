@@ -1,0 +1,37 @@
+#server:
+#   port: 7070
+#
+#
+#spring:
+#   data:
+#      mongodb:
+#          uri: mongodb://root:examplepassword@localhost:27017/profile-api-mongo
+
+server:
+  port: 7070
+spring:
+  config:
+    activate:
+      on-profile: default
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: profile-api-mongo
+      username: root
+      password: password
+      authentication-database: admin
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  data:
+    mongodb:
+      host: mongo
+      port: 27017
+      database: reactiveSpringExample
+      username: root
+      password: password
+      authentication-database: admin

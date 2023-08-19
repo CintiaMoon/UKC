@@ -28,55 +28,66 @@ Continuous Improvement: The app would actively collect user feedback and use it 
 The Universal Knowledge Connector would bring together a global community of learners, educators, and problem solvers, democratizing knowledge and expertise. By promoting collaboration and cross-disciplinary interactions, this application could potentially lead to groundbreaking solutions and innovations for various challenges faced by humanity.
 
 
-*** Architecture Overview ***
+** Architecture Overview **
 
-User Management Microservice (UMS):
+- User Management Microservice (UMS)
 
 Manages user registration, authentication, and profile data.
 Utilizes AWS Cognito for user authentication.
 Stores user profile information in Amazon RDS (Relational Database Service).
 
-Profile Microservice (PSM):
+- Profile Microservice (PSM)
+
 Stores and manages user expertise, skills, education, and experience details.
 Utilizes Amazon DynamoDB for storing user profile details.
 
-Content Microservice (CMS):
+- Content Microservice (CMS)
+
 Handles courses, course enrollments, questions, and replies.
 Uses Amazon RDS to store course-related information.
 
-Collaboration Microservice (COLL):
+- Collaboration Microservice (COLL)
+
 Manages user conversations and messages.
 Utilizes Amazon SQS (Simple Queue Service) for asynchronous message processing.
 
-Recommendation Microservice (RECM):
+- Recommendation Microservice (RECM)
+
 Generates personalized recommendations for courses and experts.
 Communicates with other microservices for user and course data.
 
-Analytics Microservice (ANALYTICS):
+- Analytics Microservice (ANALYTICS)
+
 Logs user and course activities for analysis and reporting.
 Stores activity data in Amazon S3 for data lake processing.
 
-Payment Microservice (PAYMENT):
+- Payment Microservice (PAYMENT)
+
 Handles payment processing for course enrollments.
 Uses Amazon DynamoDB to record transaction history.
 
-Authentication and Authorization Microservice (AUTH):
+- Authentication and Authorization Microservice (AUTH)
+
 Manages user roles and permissions.
 Utilizes AWS IAM (Identity and Access Management) for authorization.
 
-Notification Microservice (NOTIF):
+- Notification Microservice (NOTIF)
+
 Sends notifications to users.
 Uses Amazon SNS (Simple Notification Service) for push notifications.
 
-Search and Match Microservice (SEARCH):
+- Search and Match Microservice (SEARCH)
+
 Implements user search and matching algorithm.
 Interacts with various microservices for user and profile data.
 
-AI Insights Microservice (AI):
+- AI Insights Microservice (AI)
+
 Generates AI-driven insights for users.
 Utilizes Amazon Comprehend or SageMaker for AI processing.
 
-Gateway Microservice (GATEWAY):
+- Gateway Microservice (GATEWAY)
+
 Serves as the entry point for external requests.
 Routes requests to appropriate microservices.
 Uses AWS API Gateway for managing APIs.
