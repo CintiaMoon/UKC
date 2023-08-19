@@ -1,0 +1,20 @@
+server:
+  port: 6060
+  
+spring:
+  application:
+    name: content-service
+   
+  datasource:
+    url: jdbc:postgresql://localhost:5432/contentdb
+    username: root
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  jackson:
+     serialization.write-dates-as-timestamps: false 
