@@ -16,7 +16,7 @@ import lombok.Data;
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long courseId;
+    private Long id;
 
     @NotBlank
     private String title;

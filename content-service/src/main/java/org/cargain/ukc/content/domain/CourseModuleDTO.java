@@ -9,14 +9,17 @@ import lombok.Data;
 @Data
 @Builder
 public class CourseModuleDTO {
+
+	private long id;
+	
 	@NotNull
 	private Long courseId;
 
-    @NotBlank
-    private String title;
+	@NotBlank
+	private String title;
 
-    private String description;
+	private String description;
 
-    @Min(1)
-    private Integer position;
+	@Min(1)
+	private Integer position;
 }

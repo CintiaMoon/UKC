@@ -9,6 +9,9 @@ import lombok.Data;
 @Data
 @Builder
 public class LessonDTO {
+	
+	private long id;
+	
 	@NotNull
 	private Long moduleId;
 
