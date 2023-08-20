@@ -3,7 +3,6 @@ package org.cargain.ukc.content.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.cargain.ukc.commons.utils.kafka.producer.KafkaProducer;
 import org.cargain.ukc.content.domain.CourseDTO;
 import org.cargain.ukc.content.exception.ResourceNotFoundException;
 import org.cargain.ukc.content.mapper.CourseMapper;
@@ -18,7 +17,6 @@ import lombok.AllArgsConstructor;
 public class CourseService {
     
     private final CourseRepository courseRepository;
-    private final KafkaProducer producer;
 
     public List<CourseDTO> getAllCourses() {        
         List<Course> curses = courseRepository.findAll();
