@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @Builder
 public class CourseDTO {
-	
+	private long id;
 	@NotBlank
 	private String title;
 	@NotBlank
