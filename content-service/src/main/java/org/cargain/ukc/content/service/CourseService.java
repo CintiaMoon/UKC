@@ -2,6 +2,9 @@ package org.cargain.ukc.content.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.cargain.ukc.commons.events.content.CourseCreatedEvent;
+import org.cargain.ukc.commons.utils.kafka.producer.KafkaProducer;
+import org.cargain.ukc.commons.utils.mappers.ModelMapperService;
 
 import org.cargain.ukc.content.domain.CourseDTO;
 import org.cargain.ukc.content.exception.ResourceNotFoundException;
@@ -17,6 +20,8 @@ import lombok.AllArgsConstructor;
 public class CourseService {
     
     private final CourseRepository courseRepository;
+    private final ModelMapperService mapper;
+    private final KafkaProducer producer;
 
     public List<CourseDTO> getAllCourses() {        
         List<Course> curses = courseRepository.findAll();
@@ -33,7 +38,18 @@ public class CourseService {
 
     public CourseDTO createCourse(CourseDTO courseDto) {
     	Course course = CourseMapper.INSTANCE.dtoToCourse(courseDto);
-        return CourseMapper.INSTANCE.courseToDto(courseRepository.save(course));
+    	
+    	var courseSaved = courseRepository.save(course);
+        CourseDTO courseDtoResponse =  CourseMapper.INSTANCE.courseToDto(courseSaved);
+        sendKafkaCourseCreatedEvent(courseSaved);
+        
+        return courseDtoResponse;
+    }
+    
+    private void sendKafkaCourseCreatedEvent(Course courseCreated)    {
+        var event = mapper.forResponse().map(courseCreated, CourseCreatedEvent.class);
+                
+        producer.sendMessage(event, "course-created");
     }
 
     public CourseDTO updateCourse(Long courseId, CourseDTO updatedCourse) {

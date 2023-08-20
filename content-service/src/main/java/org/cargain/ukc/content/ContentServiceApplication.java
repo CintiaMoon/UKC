@@ -3,7 +3,8 @@ package org.cargain.ukc.content;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+
+@SpringBootApplication(scanBasePackages = {"org.cargain.ukc.commons", "org.cargain.ukc.content" })
 public class ContentServiceApplication {
 
 	public static void main(String[] args) {
