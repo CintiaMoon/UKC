@@ -2,10 +2,10 @@ package org.cargain.ukc.content.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.cargain.ukc.commons.events.content.CourseCreatedEvent;
 import org.cargain.ukc.commons.utils.kafka.producer.KafkaProducer;
 import org.cargain.ukc.commons.utils.mappers.ModelMapperService;
+
 import org.cargain.ukc.content.domain.CourseDTO;
 import org.cargain.ukc.content.exception.ResourceNotFoundException;
 import org.cargain.ukc.content.mapper.CourseMapper;
