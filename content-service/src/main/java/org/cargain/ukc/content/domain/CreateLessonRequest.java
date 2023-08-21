@@ -2,18 +2,15 @@ package org.cargain.ukc.content.domain;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Data
-@Builder
-public class LessonDTO {
-	
-	private long id;
-	
-	@NotNull
-	private Long moduleId;
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateLessonRequest {
 
     @NotBlank
     private String title;

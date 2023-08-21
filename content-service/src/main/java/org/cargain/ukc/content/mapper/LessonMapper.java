@@ -1,14 +1,23 @@
 package org.cargain.ukc.content.mapper;
 
-import org.cargain.ukc.content.domain.LessonDTO;
+import org.cargain.ukc.content.domain.CreateLessonRequest;
+import org.cargain.ukc.content.domain.LessonResponse;
 import org.cargain.ukc.content.model.Lesson;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper
+
+@Mapper(
+        componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+)
 public interface LessonMapper {
-    LessonMapper INSTANCE = Mappers.getMapper(LessonMapper.class);
 
-    LessonDTO lessonToDto(Lesson lesson);
-    Lesson dtoToLesson(LessonDTO dto);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "module", ignore = true)
+    Lesson toLesson(CreateLessonRequest createLessonRequest);
+
+    LessonResponse toLessonResponse(Lesson lesson);
+
 }
