@@ -1,14 +1,23 @@
 package org.cargain.ukc.content.mapper;
 
-import org.cargain.ukc.content.domain.CourseDTO;
+import org.cargain.ukc.content.domain.CourseResponse;
+import org.cargain.ukc.content.domain.CreateCourseRequest;
 import org.cargain.ukc.content.model.Course;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper
+
+@Mapper(
+        componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+)
 public interface CourseMapper {
-    CourseMapper INSTANCE = Mappers.getMapper(CourseMapper.class);
 
-    CourseDTO courseToDto(Course course);
-    Course dtoToCourse(CourseDTO dto);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "modules", ignore = true)
+    Course toCourse(CreateCourseRequest createCourseRequest);
+
+    CourseResponse toCourseResponse(Course course);
+
 }

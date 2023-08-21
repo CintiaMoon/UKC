@@ -3,50 +3,59 @@ package org.cargain.ukc.content.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.cargain.ukc.content.domain.LessonDTO;
+import org.cargain.ukc.content.domain.CreateLessonRequest;
+import org.cargain.ukc.content.domain.LessonResponse;
+import org.cargain.ukc.content.exception.ResourceNotFoundException;
 import org.cargain.ukc.content.mapper.LessonMapper;
 import org.cargain.ukc.content.model.Lesson;
+import org.cargain.ukc.content.model.Module;
 import org.cargain.ukc.content.repository.LessonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.cargain.ukc.content.repository.ModuleRepository;
 import org.springframework.stereotype.Service;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class LessonService {
-    @Autowired
-    private LessonRepository lessonRepository;
 
-    public List<LessonDTO> getAllLessons() {        
-        List<Lesson> curses = lessonRepository.findAll();
-        return curses.stream()
-                .map(LessonMapper.INSTANCE::lessonToDto)
-                .collect(Collectors.toList());
-    }
-    
-//    public List<LessonDTO> getLessonsByModuleId(Long moduleId) {
-//        List<Lesson> lessons = lessonRepository.findByModuleId(moduleId);
-//        return lessons.stream()
-//            .map(LessonMapper.INSTANCE::lessonToDto)
-//            .collect(Collectors.toList());
-//    }
+	private final LessonRepository lessonRepository;
 
-    public LessonDTO createLesson(LessonDTO lessonDTO) {
-        Lesson lesson = LessonMapper.INSTANCE.dtoToLesson(lessonDTO);
-        lesson = lessonRepository.save(lesson);
-        return LessonMapper.INSTANCE.lessonToDto(lesson);
-    }
+	private final LessonMapper mapper;
+	private final ModuleRepository moduleRepository;
 
-    public LessonDTO updateLesson(Long lessonId, LessonDTO updatedLesson) {
-        Lesson existingLesson = lessonRepository.findById(lessonId).orElse(null);
-        if (existingLesson != null) {
-            existingLesson.setTitle(updatedLesson.getTitle());
-            existingLesson.setContent(updatedLesson.getContent());
-            // Update other properties as needed
-            return LessonMapper.INSTANCE.lessonToDto(lessonRepository.save(existingLesson));
-        }
-        return null;
-    }
+	public LessonResponse validateAndGetLesson(Long moduleId, Long lessonId) {
+		Lesson lesson = lessonRepository.findByIdAndModuleId(lessonId, moduleId).orElseThrow(
+				() -> new ResourceNotFoundException("Module : " + moduleId + " not found for lesson " + lessonId));
+		return mapper.toLessonResponse(lesson);
+	}
 
-    public void deleteLesson(Long lessonId) {
-        lessonRepository.deleteById(lessonId);
-    }
+	public List<LessonResponse> getAll() {
+		List<Lesson> lessons = lessonRepository.findAll();
+		return lessons.stream().map(lesson -> mapper.toLessonResponse(lesson)).collect(Collectors.toList());
+	}
+
+
+	public LessonResponse saveLesson(Long moduleId, CreateLessonRequest createLessonRequest) {
+
+		Module module = moduleRepository.findById(moduleId)
+				.orElseThrow(() -> new ResourceNotFoundException("Module not found: " + moduleId));
+		
+		Lesson lesson = mapper.toLesson(createLessonRequest);
+		lesson.addModule(module);
+
+		lessonRepository.save(lesson);
+		LessonResponse moduleResponse = mapper.toLessonResponse(lesson);
+		return moduleResponse;
+
+	}
+
+	public LessonResponse deleteLesson(Long lessonId, Long moduleId) {
+		Lesson lesson = lessonRepository.findByIdAndModuleId(lessonId, moduleId).orElseThrow(
+				() -> new ResourceNotFoundException("Module : " + moduleId + " not found for course " + lessonId));
+		lessonRepository.delete(lesson);
+		LessonResponse lessonResponse = mapper.toLessonResponse(lesson);
+		return lessonResponse;
+	}
+
 }

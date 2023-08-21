@@ -5,13 +5,15 @@ import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-public class CourseDTO {
-	private long id;
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateCourseRequest {
+
 	@NotBlank
 	private String title;
 	@NotBlank
@@ -23,4 +25,5 @@ public class CourseDTO {
 	@NotNull
 	private LocalDateTime endDate;
 	private LocalDateTime creationDate;
+
 }
