@@ -114,6 +114,7 @@
 		<module>ukc-commons</module>
 		<module>profile-service</module>
 		<module>content-service</module>
-		
+
+		<module>ukc-content</module>
 	</modules>
 </project>
