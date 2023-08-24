@@ -1,0 +1,42 @@
+server:
+  port: 8585
+  
+spring:
+  application:
+    name: content-service
+   
+  datasource:
+    url: jdbc:h2:mem:liquibaseDB
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+    defer-datasource-initialization: true    
+
+  jackson:
+     serialization.write-dates-as-timestamps: false 
+     
+     
+  kafka:
+        prducer:
+            bootstrap-servers: http://localhot:9092
+            key-serializer: org.apache.kafka.common.serialization.StringSeralizer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSeralizer
+        cosumer:
+            auto-offset-reset: erliest
+            bootstrap-servers: http://localhost:9092
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            properties:
+                spring:
+                    json:
+                        trusted:
+                            packages: "*"
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            
+            
