@@ -24,6 +24,5 @@ public class CreateCourseRequest {
 	private LocalDateTime startDate;
 	@NotNull
 	private LocalDateTime endDate;
-	private LocalDateTime creationDate;
 
 }

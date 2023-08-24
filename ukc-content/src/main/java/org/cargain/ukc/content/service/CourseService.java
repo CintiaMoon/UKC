@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.cargain.ukc.commons.events.content.CourseCreatedEvent;
 import org.cargain.ukc.commons.utils.kafka.producer.KafkaProducer;
-import org.cargain.ukc.commons.utils.mappers.ModelMapperService;
 import org.cargain.ukc.content.domain.CourseResponse;
 import org.cargain.ukc.content.domain.CreateCourseRequest;
 import org.cargain.ukc.content.domain.UpdateCourseRequest;
@@ -15,6 +14,7 @@ import org.cargain.ukc.content.mapper.CourseMapper;
 import org.cargain.ukc.content.model.Course;
 import org.cargain.ukc.content.repository.CourseRepository;
 import org.cargain.ukc.content.utils.Constants;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class CourseService {
 	private final CourseRepository courseRepository;
 	private final CourseMapper mapper;
 	private final KafkaProducer producer;
-	private final ModelMapperService mapperService;
+	private final ModelMapper modelMapper;
 
 // ==========================================================================================
 
@@ -50,7 +50,7 @@ public class CourseService {
 		Course course = mapper.toCourse(createCourseRequest);
 		course = courseRepository.save(course);
 
-		sendKafkaCourseCreatedEvent(course, Constants.COURSE_CREATED);
+		sendKafkaCourseEvent(course, Constants.COURSE_CREATED);
 		CourseResponse courseDtoResponse = mapper.toCourseResponse(course);
 
 		return courseDtoResponse;
@@ -67,7 +67,7 @@ public class CourseService {
 		course.setTitle(courseReq.getTitle());
 		course = courseRepository.save(course);
 
-		sendKafkaCourseCreatedEvent(course, Constants.COURSE_UPDATED);
+		sendKafkaCourseEvent(course, Constants.COURSE_UPDATED);
 		CourseResponse courseDtoResponse = mapper.toCourseResponse(course);
 
 		return courseDtoResponse;
@@ -79,13 +79,12 @@ public class CourseService {
 				.orElseThrow(() -> new ResourceNotFoundException("Course not found: " + courseId));
 
 		courseRepository.delete(course);
-		sendKafkaCourseCreatedEvent(course, Constants.COURSE_DELETED);
+		sendKafkaCourseEvent(course, Constants.COURSE_DELETED);
 		return mapper.toCourseResponse(course);
 	}
 
-	private void sendKafkaCourseCreatedEvent(Course courseCreated, String courseEvent) {
-		var event = mapperService.forResponse().map(courseCreated, CourseCreatedEvent.class);
-
+	private void sendKafkaCourseEvent(Course courseCreated, String courseEvent) {
+		var event = modelMapper.map(courseCreated, CourseCreatedEvent.class);
 		producer.sendMessage(event, courseEvent);
 	}
 // =======================================================================================================
